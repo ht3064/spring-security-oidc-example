@@ -18,7 +18,7 @@ public class Member extends BaseTimeEntity {
     private Long id;
 
     @Embedded
-    private Profile profile;
+    private OauthInfo oauthInfo;
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
@@ -27,15 +27,16 @@ public class Member extends BaseTimeEntity {
     private MemberStatus status;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Member(Profile profile, MemberRole role, MemberStatus status) {
-        this.profile = profile;
+    private Member(
+            OauthInfo oauthInfo, MemberRole role, MemberStatus status) {
+        this.oauthInfo = oauthInfo;
         this.role = role;
         this.status = status;
     }
 
-    public static Member createNormalMember(Profile profile) {
+    public static Member createNormalMember(OauthInfo oauthInfo) {
         return Member.builder()
-                .profile(profile)
+                .oauthInfo(oauthInfo)
                 .role(MemberRole.USER)
                 .status(MemberStatus.NORMAL)
                 .build();
