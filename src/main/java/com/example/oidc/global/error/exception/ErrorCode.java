@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode {
 
-    EXAMPLE_ERROR(HttpStatus.BAD_REQUEST, "Example Error Message"),
+    ID_TOKEN_VERIFICATION_FAILED(HttpStatus.UNAUTHORIZED, "ID 토큰 검증에 실패했습니다."),
     ;
 
     private final HttpStatus status;
