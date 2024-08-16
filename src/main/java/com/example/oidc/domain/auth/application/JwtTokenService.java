@@ -2,6 +2,7 @@ package com.example.oidc.domain.auth.application;
 
 import com.example.oidc.domain.auth.dao.RefreshTokenRepository;
 import com.example.oidc.domain.auth.domain.RefreshToken;
+import com.example.oidc.domain.auth.dto.AccessTokenDto;
 import com.example.oidc.domain.member.domain.MemberRole;
 import com.example.oidc.global.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +28,13 @@ public class JwtTokenService {
                         .build();
         refreshTokenRepository.save(refreshToken);
         return token;
+    }
+
+    public AccessTokenDto retrieveAccessToken(String accessTokenValue) {
+        try {
+            return jwtUtil.parseAccessToken(accessTokenValue);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
