@@ -1,7 +1,9 @@
 package com.example.oidc.domain.auth.dto.response;
 
-public record SocialLoginResponse(String accessToken, String refreshToken) {
-    public static SocialLoginResponse of(String accessToken, String refreshToken) {
-        return new SocialLoginResponse(accessToken, refreshToken);
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public record SocialLoginResponse(String accessToken, @JsonIgnore String refreshToken) {
+    public static SocialLoginResponse of(TokenPairResponse response) {
+        return new SocialLoginResponse(response.accessToken(), response.refreshToken());
     }
 }

@@ -1,7 +1,9 @@
 package com.example.oidc.domain.auth.application;
 
+import com.example.oidc.domain.auth.dto.request.AuthCodeRequest;
 import com.example.oidc.domain.auth.dto.response.KakaoTokenResponse;
 import com.example.oidc.domain.auth.dto.response.SocialLoginResponse;
+import com.example.oidc.domain.auth.dto.response.TokenPairResponse;
 import com.example.oidc.domain.member.dao.MemberRepository;
 import com.example.oidc.domain.member.domain.Member;
 import com.example.oidc.domain.member.domain.OauthInfo;
@@ -22,21 +24,23 @@ public class AuthService {
     private final IdTokenVerifier idTokenVerifier;
     private final MemberRepository memberRepository;
 
-    public SocialLoginResponse socialLoginMember(String code) {
-        KakaoTokenResponse response = kakaoService.getOauthToken(code);
+    public SocialLoginResponse socialLoginMember(AuthCodeRequest request) {
+        KakaoTokenResponse response = kakaoService.getOauthToken(request.code());
         String idToken = response.id_token();
         OidcUser oidcUser = idTokenVerifier.getOidcUser(idToken);
 
         Optional<Member> optionalMember = findByOidcUser(oidcUser);
         Member member = optionalMember.orElseGet(() -> saveMember(oidcUser));
 
-        return getLoginResponse(member);
+        TokenPairResponse tokenPairResponse = getLoginResponse(member);
+
+        return SocialLoginResponse.of(tokenPairResponse);
     }
 
-    private SocialLoginResponse getLoginResponse(Member member) {
+    private TokenPairResponse getLoginResponse(Member member) {
         String accessToken = jwtTokenService.createAccessToken(member.getId(), member.getRole());
         String refreshToken = jwtTokenService.createRefreshToken(member.getId());
-        return SocialLoginResponse.of(accessToken, refreshToken);
+        return TokenPairResponse.of(accessToken, refreshToken);
     }
 
     private Optional<Member> findByOidcUser(OidcUser oidcUser) {
