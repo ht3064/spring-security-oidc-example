@@ -17,7 +17,7 @@ public class CookieUtil {
         ResponseCookie refreshTokenCookie =
                 ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, refreshToken)
                         .path("/")
-                        .secure(false)
+                        .secure(true)
                         .sameSite(sameSite)
                         .httpOnly(true)
                         .build();
