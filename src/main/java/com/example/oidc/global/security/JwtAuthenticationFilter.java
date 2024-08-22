@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         cookieUtil.generateRefreshTokenCookie(reissueRefreshTokenDto.refreshTokenValue());
 
                 response.addHeader(HttpHeaders.SET_COOKIE, headers.getFirst(HttpHeaders.SET_COOKIE));
-                response.addHeader(HttpHeaders.AUTHORIZATION, reissueAccessTokenDto.accessTokenValue());
+                response.addHeader(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + reissueAccessTokenDto.accessTokenValue());
 
                 setAuthenticationToken(reissueAccessTokenDto.memberId(), reissueAccessTokenDto.memberRole());
             }
