@@ -31,24 +31,24 @@ public class JwtTokenService {
 
     public String createRefreshToken(Long memberId) {
         String token = jwtUtil.generateRefreshToken(memberId);
-        RefreshToken refreshToken =
-                RefreshToken.builder()
-                        .memberId(memberId)
-                        .token(token)
-                        .build();
-        refreshTokenRepository.save(refreshToken);
+        saveRefreshTokenToRedis(memberId, token, jwtUtil.getRefreshTokenExpirationTime());
         return token;
     }
 
     public RefreshTokenDto createRefreshTokenDto(Long memberId) {
         RefreshTokenDto refreshTokenDto = jwtUtil.generateRefreshTokenDto(memberId);
+        saveRefreshTokenToRedis(memberId, refreshTokenDto.refreshTokenValue(), refreshTokenDto.ttl());
+        return refreshTokenDto;
+    }
+
+    private void saveRefreshTokenToRedis(Long memberId, String refreshTokenValue, long ttl) {
         RefreshToken refreshToken =
                 RefreshToken.builder()
                         .memberId(memberId)
-                        .token(refreshTokenDto.refreshTokenValue())
+                        .token(refreshTokenValue)
+                        .ttl(ttl)
                         .build();
         refreshTokenRepository.save(refreshToken);
-        return refreshTokenDto;
     }
 
     public AccessTokenDto retrieveAccessToken(String accessTokenValue) {
@@ -66,7 +66,7 @@ public class JwtTokenService {
             return null;
         }
 
-        Optional<RefreshToken> refreshToken = getRefreshToken(refreshTokenDto.memberId());
+        Optional<RefreshToken> refreshToken = getRefreshTokenFromRedis(refreshTokenDto.memberId());
 
         if (refreshToken.isPresent() &&
                 refreshTokenDto.refreshTokenValue().equals(refreshToken.get().getToken())) {
@@ -95,7 +95,7 @@ public class JwtTokenService {
         }
     }
 
-    private Optional<RefreshToken> getRefreshToken(Long memberId) {
+    private Optional<RefreshToken> getRefreshTokenFromRedis(Long memberId) {
         return refreshTokenRepository.findById(memberId);
     }
 }

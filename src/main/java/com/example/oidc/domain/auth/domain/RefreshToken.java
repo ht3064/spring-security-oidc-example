@@ -1,26 +1,30 @@
 package com.example.oidc.domain.auth.domain;
 
-import com.example.oidc.domain.common.model.BaseTimeEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
 
 @Getter
-@Entity
+@RedisHash(value = "refreshToken")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RefreshToken extends BaseTimeEntity {
+public class RefreshToken {
 
     @Id
     private Long memberId;
 
     private String token;
 
+    @TimeToLive
+    private long ttl;
+
     @Builder
-    public RefreshToken(Long memberId, String token) {
+    public RefreshToken(Long memberId, String token, long ttl) {
         this.memberId = memberId;
         this.token = token;
+        this.ttl = ttl;
     }
 }

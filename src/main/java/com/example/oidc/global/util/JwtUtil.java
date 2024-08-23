@@ -83,6 +83,10 @@ public class JwtUtil {
         }
     }
 
+    public long getRefreshTokenExpirationTime() {
+        return jwtProperties.refreshTokenExpirationTime();
+    }
+
     private Jws<Claims> getClaims(String token, Key key) {
         return Jwts.parserBuilder()
                 .requireIssuer(jwtProperties.issuer())
