@@ -1,0 +1,12 @@
+spring:
+  config:
+    activate:
+      on-profile: "datasource"
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/example/oidc
+    username: sa
+    password:
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
