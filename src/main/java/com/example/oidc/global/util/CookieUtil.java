@@ -28,6 +28,25 @@ public class CookieUtil {
         return headers;
     }
 
+    public HttpHeaders deleteRefreshTokenCookie() {
+
+        String sameSite = determineSameSitePolicy();
+
+        ResponseCookie refreshTokenCookie =
+                ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, "")
+                        .path("/")
+                        .maxAge(0)
+                        .secure(true)
+                        .sameSite(sameSite)
+                        .httpOnly(true)
+                        .build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+
+        return headers;
+    }
+
     private String determineSameSitePolicy() {
         return Cookie.SameSite.NONE.attributeValue();
     }
