@@ -34,6 +34,8 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests(
                 requests ->
                         requests
+                                .requestMatchers("/oidc-actuator/**")
+                                .permitAll()
                                 .requestMatchers("/auth/**")
                                 .permitAll()
                                 .anyRequest()
