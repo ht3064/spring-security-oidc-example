@@ -1,7 +1,8 @@
 spring:
   profiles:
     group:
-      local: "local, datasource"
+      local: "local"
+      dev: "dev, datasource, actuator"
     include:
       - redis
       - security

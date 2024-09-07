@@ -2,6 +2,10 @@ spring:
   config:
     activate:
       on-profile: "local"
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/example/oidc
+    username: sa
+    password:
   jpa:
     hibernate:
       ddl-auto: create
@@ -9,6 +13,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        default_batch_fetch_size: 100
     open-in-view: false
 
 logging:

@@ -3,9 +3,10 @@ spring:
     activate:
       on-profile: "datasource"
   datasource:
-    url: jdbc:h2:tcp://localhost/~/example/oidc
-    username: sa
-    password:
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${DB_NAME}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
   jpa:
     properties:
       hibernate:
